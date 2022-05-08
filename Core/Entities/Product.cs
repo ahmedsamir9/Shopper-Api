@@ -15,5 +15,6 @@ namespace Core.Entities
         public int NumberInStock { get; set; }
         public float Price { get; set; }
         public float Rate { get; set; }
+       public Category category { get; set; }
     }
 }
