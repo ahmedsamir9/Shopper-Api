@@ -11,11 +11,8 @@ namespace ShopperAPi.Controllers
     {
       
         // GET api/<ProductsController>/5
-        [HttpGet("{id}")]
-        public IActionResult Get(int id)
-        {
-            return NotFound(new ApiErrorResponse(404));
-        }
+      
+        
 
        
     }

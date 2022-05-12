@@ -1,3 +1,4 @@
+using Core.Entities;
 using Core.Interfaces;
 using Inferastructure.DB;
 using Inferastructure.Repositories;
@@ -14,7 +15,7 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 //samir check this inject 
-builder.Services.AddScoped(typeof(IBaseRepository<>), (typeof(GenericRepository<>)));
+builder.Services.AddScoped<IBaseRepository<Category>,CategoryRepository>();
 
 builder.Services.AddDbContext<AppDbContext>(op =>
 op.UseSqlServer(builder.Configuration.GetConnectionString("ShopperDb")));

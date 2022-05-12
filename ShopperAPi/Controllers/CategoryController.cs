@@ -1,8 +1,9 @@
 ﻿using Core.Entities;
 using Core.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Linq;
+using ShopperAPi.Errors;
+
+// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace ShopperAPi.Controllers
 {
@@ -11,38 +12,45 @@ namespace ShopperAPi.Controllers
     public class CategoryController : ControllerBase
     {
         private readonly IBaseRepository<Category> CatRepo;
+
+
         public CategoryController(IBaseRepository<Category> catrepo)
         {
             this.CatRepo = catrepo;
         }
+        // GET: api/<CategoryController>
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public IActionResult GetCategories()
         {
             var result = CatRepo.All().ToList();
             return Ok(result);
         }
-        [HttpGet("id:int")]
-        public async Task<IActionResult> Get(int id)
+
+        // GET api/<CategoryController>/5
+        [HttpGet("{id:int}")]
+        public IActionResult GetCategory(int id)
         {
-            var category = (Category)CatRepo.Find(c => c.Id == id);
+            var category = CatRepo.FindOne(c => c.Id == id);
             if (category == null)
             {
-                return NotFound();
+                return NotFound( new ApiErrorResponse(404));
             }
 
             return Ok(category);
         }
+
+        // POST api/<CategoryController>
         [HttpPost]
-        public async Task<IActionResult> Post([FromForm] Category category)
+        public IActionResult PostCategories([FromForm] Category category)
         {
- 
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-           
-            var result =CatRepo.All().ToList();
-            bool check= result.Contains(category);
+
+            var result = CatRepo.All().ToList();
+            bool check = result.Contains(category);
             if (check)
             {
                 return BadRequest(result);
@@ -59,8 +67,10 @@ namespace ShopperAPi.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [HttpPost]
-        public async Task<IActionResult> Edit( int id,[FromForm] Category category)
+
+        // PUT api/<CategoryController>/5
+        [HttpPut("{id}")]
+        public IActionResult EditCategories(int id, [FromForm] Category category)
         {
             if (!ModelState.IsValid)
             {
@@ -72,26 +82,28 @@ namespace ShopperAPi.Controllers
             }
             try
             {
-                
+
                 var result = (Category)CatRepo.Find(c => c.Id == id);
                 result.Name = category.Name;
                 CatRepo.SaveChanges();
                 return Ok(result);
             }
-            catch (Exception ex)    
+            catch (Exception ex)
             {
-                return BadRequest(ex.Message); 
-            } 
+                return BadRequest(ex.Message);
+            }
         }
-        [HttpDelete]
-        public async Task<IActionResult> Delete(int id)
+
+        // DELETE api/<CategoryController>/5
+        [HttpDelete("{id}")]
+        public IActionResult DeleteCategory(int id)
         {
             var result = CatRepo.Get(id);
             if (result == null)
             {
                 return NotFound();
             }
-               CatRepo.Delete(result);
+            CatRepo.Delete(result);
             CatRepo.SaveChanges();
             return Ok(result);
         }
