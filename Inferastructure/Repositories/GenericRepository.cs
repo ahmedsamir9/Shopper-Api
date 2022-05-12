@@ -28,7 +28,9 @@ namespace Inferastructure.Repositories
 
         public virtual IEnumerable<T> Find(Expression<Func<T, bool>> predicate)
         {
-
+            var x = Context.Set<T>()
+                .AsQueryable();
+            x.Include("sas");
             return Context.Set<T>()
                 .AsQueryable()
                 .Where(predicate).ToList();
