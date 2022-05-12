@@ -1,4 +1,6 @@
+using Core.Interfaces;
 using Inferastructure.DB;
+using Inferastructure.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ShopperAPi.Errors;
@@ -11,6 +13,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+//samir check this inject 
+builder.Services.AddScoped(typeof(IBaseRepository<>), (typeof(GenericRepository<>)));
+
 builder.Services.AddDbContext<AppDbContext>(op =>
 op.UseSqlServer(builder.Configuration.GetConnectionString("ShopperDb")));
 builder.Services.Configure<ApiBehaviorOptions> (options =>
