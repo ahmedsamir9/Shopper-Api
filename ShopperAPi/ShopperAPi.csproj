@@ -27,8 +27,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="DTOS\" />
     <Folder Include="Profiles\" />
+    <Folder Include="wwwroot\images\" />
   </ItemGroup>
 
 </Project>

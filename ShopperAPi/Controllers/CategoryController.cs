@@ -59,8 +59,8 @@ namespace ShopperAPi.Controllers
             {
                 CatRepo.Add(category);
                 CatRepo.SaveChanges();
-                string url = Url.Link("getRoute", new { id = category.Id });
-                return Created(url, category);
+                //string url = Url.Link("getRoute", new { id = category.Id });
+                return Created("lll", category);
             }
             catch (Exception ex)
             {
@@ -83,7 +83,7 @@ namespace ShopperAPi.Controllers
             try
             {
 
-                var result = (Category)CatRepo.Find(c => c.Id == id);
+                var result = CatRepo.FindOne(c => c.Id == id);
                 result.Name = category.Name;
                 CatRepo.SaveChanges();
                 return Ok(result);
@@ -101,7 +101,7 @@ namespace ShopperAPi.Controllers
             var result = CatRepo.Get(id);
             if (result == null)
             {
-                return NotFound();
+                return NotFound(new ApiErrorResponse(404));
             }
             CatRepo.Delete(result);
             CatRepo.SaveChanges();

@@ -14,8 +14,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-//samir check this inject 
+
+
 builder.Services.AddScoped<IBaseRepository<Category>,CategoryRepository>();
+builder.Services.AddScoped<IBaseRepository<Product>, ProductRepository>();
 
 builder.Services.AddDbContext<AppDbContext>(op =>
 op.UseSqlServer(builder.Configuration.GetConnectionString("ShopperDb")));
@@ -52,6 +54,7 @@ app.UseStatusCodePagesWithReExecute("errors/{0}");
 app.UseHttpsRedirection();
 
 app.UseRouting();
+app.UseStaticFiles();
 app.UseAuthentication();
 
 app.UseAuthorization();
