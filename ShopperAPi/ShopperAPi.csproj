@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="11.0.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.4">
       <PrivateAssets>all</PrivateAssets>
@@ -24,11 +25,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Core\Core.csproj" />
     <ProjectReference Include="..\Inferastructure\Inferastructure.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Profiles\" />
-    <Folder Include="wwwroot\images\" />
   </ItemGroup>
 
 </Project>

@@ -30,19 +30,19 @@ namespace ShopperAPi.Helpers
             }
         }
 
-        public string UploadImage(Product product)
+        public string UploadImage(IFormFile file)
         {
             string uniqueFileName = null;
 
-            if (product.ImageFile != null)
+            if (file != null)
             {
 
                 string uploadsFolder = Path.Combine(Webhost.WebRootPath, "images");
-                uniqueFileName = Guid.NewGuid().ToString() + "_" + product.ImageFile.FileName;
+                uniqueFileName = Guid.NewGuid().ToString() + "_" + file.FileName;
                 string filePath = Path.Combine(uploadsFolder, uniqueFileName);
                 using (var fileStream = new FileStream(filePath, FileMode.Create))
                 {
-                    product.ImageFile.CopyTo(fileStream);
+                    file.CopyTo(fileStream);
 
                 }
 

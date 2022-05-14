@@ -18,13 +18,13 @@ namespace Inferastructure.Repositories
         }
         public override IEnumerable<Product> All()
         {
-            return Context.products.Include(p => p.category).ToList();
+            return Context.products.Include(p => p.Category).ToList();
         }
         public override Product Get(int id)
         {
 
 
-            var product = Context.products.Include(p => p.category).FirstOrDefault(p => p.Id == id);
+            var product = Context.products.Include(p => p.Category).FirstOrDefault(p => p.Id == id);
             return product;
            
         }

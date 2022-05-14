@@ -5,7 +5,7 @@ namespace ShopperAPi.Helpers
     public interface IImageHandler
     {
         
-        public string UploadImage(Product product);
+        public string UploadImage(IFormFile file);
         public void RemoveImage(string imgPath);
     }
 }

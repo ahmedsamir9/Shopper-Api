@@ -1,6 +1,9 @@
-﻿using Core.Entities;
+﻿using AutoMapper;
+using Core.Entities;
 using Core.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using ShopperAPi.DTOS;
+using ShopperAPi.DTOS.ProductDTOs;
 using ShopperAPi.Errors;
 using ShopperAPi.Helpers;
 
@@ -12,28 +15,30 @@ namespace ShopperAPi.Controllers
     [ApiController]
     public class ProductsController : ControllerBase
     {
-        private readonly IBaseRepository<Product> prdRepo;
+        private readonly IBaseRepository<Product> ProductRepsitory;
         private readonly IImageHandler ImageHandler;
+        private readonly IMapper _mapper;
 
-
-        public ProductsController(IBaseRepository<Product> prdrepo, IImageHandler imageHandler)
+        public ProductsController(IBaseRepository<Product> prdrepo, IImageHandler imageHandler,IMapper mapper)
         {
-            this.prdRepo = prdrepo;
+            this.ProductRepsitory = prdrepo;
             ImageHandler = imageHandler;
+            _mapper = mapper;
         }
         // GET: api/<ProductsController>
         [HttpGet]
         public IActionResult GetProducts()
         {
-            var result = prdRepo.All().ToList();
+            var result = ProductRepsitory.All()
+                .Select(e=> _mapper.Map<ProductDto>(e)).ToList();
             return Ok(result);
         }
 
         // GET api/<ProductsController>/5
-        [HttpGet("{id:int}")]
+        [HttpGet("{id:int}" ,Name ="getProduct")]
         public IActionResult GetProducts(int id)
         {
-            var product = prdRepo.Get(id);
+            var product = _mapper.Map<ProductDto>(ProductRepsitory.Get(id));
             if (product == null)
             {
                 return NotFound(new ApiErrorResponse(404));
@@ -44,33 +49,25 @@ namespace ShopperAPi.Controllers
 
         // POST api/<ProductsController>
         [HttpPost]
-        public IActionResult PostProducts([FromForm] Product product)
+
+
+        public IActionResult PostProducts([FromForm] ProductMainpulationsDto product)
         {
-           // var res = product.files[0];
          
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-
-            var result = prdRepo.All().ToList();
-            bool check = result.Contains(product);
-            if (check)
-            {
-                return BadRequest(result);
-            }
-            try
-            {
-                string uniqueFileName = ImageHandler.UploadImage(product);
-                product.ImagePath = uniqueFileName;
-                prdRepo.Add(product);
-                prdRepo.SaveChanges();
-                //string url = Url.Link("getRoute", new { id = category.Id });
-                return Created("lll", product);
+            try {
+                var resultProduct = _mapper.Map<Product>(product);
+                ProductRepsitory.Add(resultProduct);
+                ProductRepsitory.SaveChanges();
+          
+                return Created("getProduct", resultProduct);
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(new ApiErrorResponse(400,ex.Message));
             }
         }
 
@@ -104,13 +101,13 @@ namespace ShopperAPi.Controllers
         [HttpDelete("{id}")]
         public IActionResult DeleteProducts(int id)
         {
-            var result = prdRepo.Get(id);
+            var result = ProductRepsitory.Get(id);
             if (result == null)
             {
                 return NotFound();
             }
-            prdRepo.Delete(result);
-            prdRepo.SaveChanges();
+            ProductRepsitory.Delete(result);
+            ProductRepsitory.SaveChanges();
             return Ok(result);
         }
 

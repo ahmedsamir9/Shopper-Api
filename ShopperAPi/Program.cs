@@ -5,6 +5,7 @@ using Inferastructure.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ShopperAPi.Errors;
+using ShopperAPi.Helpers;
 using ShopperAPi.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,7 +19,7 @@ builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddScoped<IBaseRepository<Category>,CategoryRepository>();
 builder.Services.AddScoped<IBaseRepository<Product>, ProductRepository>();
-
+builder.Services.AddScoped<IImageHandler, ImageHandler>();
 builder.Services.AddDbContext<AppDbContext>(op =>
 op.UseSqlServer(builder.Configuration.GetConnectionString("ShopperDb")));
 builder.Services.Configure<ApiBehaviorOptions> (options =>
@@ -48,17 +49,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 app.UseMiddleware<CustomExceptionMiddleware>();
-app.UseStaticFiles();
 app.UseStatusCodePagesWithReExecute("errors/{0}");
-
-app.UseHttpsRedirection();
-
-app.UseRouting();
 app.UseStaticFiles();
+app.UseHttpsRedirection();
+app.UseRouting();
 app.UseAuthentication();
-
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();

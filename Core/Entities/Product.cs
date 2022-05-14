@@ -18,10 +18,7 @@ namespace Core.Entities
         public int NumberInStock { get; set; }
         public float Price { get; set; }
         public float Rate { get; set; }
-        public int categoryID { get; set; } 
-        //[NotMapped]
-        //[Display(Name = "Upload Image")]
-        //public IFormFile ImageFile { get; set; }
-        public Category category { get; set; }
+        public int CategoryID { get; set; } 
+        public Category Category { get; set; }
     }
 }
