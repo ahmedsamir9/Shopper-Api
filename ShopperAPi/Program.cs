@@ -5,6 +5,7 @@ using Inferastructure.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ShopperAPi.Errors;
+using ShopperAPi.Helpers;
 using ShopperAPi.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,8 +15,22 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-//samir check this inject 
+
+
 builder.Services.AddScoped<IBaseRepository<Category>,CategoryRepository>();
+builder.Services.AddScoped<IBaseRepository<Product>, ProductRepository>();
+builder.Services.AddScoped<IImageHandler, ImageHandler>();
+string txt = "";
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(txt,
+    builder =>
+    {
+        builder.AllowAnyOrigin();
+        builder.AllowAnyMethod();
+        builder.AllowAnyHeader();
+    });
+});
 
 builder.Services.AddDbContext<AppDbContext>(op =>
 op.UseSqlServer(builder.Configuration.GetConnectionString("ShopperDb")));
@@ -46,16 +61,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 app.UseMiddleware<CustomExceptionMiddleware>();
-app.UseStaticFiles();
 app.UseStatusCodePagesWithReExecute("errors/{0}");
-
+app.UseStaticFiles();
 app.UseHttpsRedirection();
-
 app.UseRouting();
+app.UseCors(txt);
 app.UseAuthentication();
-
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();

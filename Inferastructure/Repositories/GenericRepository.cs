@@ -1,4 +1,5 @@
 ﻿using Core.Interfaces;
+using Inferastructure.DB;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,7 @@ namespace Inferastructure.Repositories
     public abstract class GenericRepository<T>
         : IBaseRepository<T> where T : class
     {
-        public GenericRepository(DbContext _Context)
+        public GenericRepository(AppDbContext _Context)
         {
             Context = _Context;
         }

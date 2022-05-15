@@ -11,18 +11,18 @@ namespace ShopperAPi.Controllers
     [ApiController]
     public class CategoryController : ControllerBase
     {
-        private readonly IBaseRepository<Category> CatRepo;
+        private readonly IBaseRepository<Category> CatRepository;
 
 
         public CategoryController(IBaseRepository<Category> catrepo)
         {
-            this.CatRepo = catrepo;
+            this.CatRepository = catrepo;
         }
         // GET: api/<CategoryController>
         [HttpGet]
         public IActionResult GetCategories()
         {
-            var result = CatRepo.All().ToList();
+            var result = CatRepository.All().ToList();
             return Ok(result);
         }
 
@@ -30,7 +30,7 @@ namespace ShopperAPi.Controllers
         [HttpGet("{id:int}")]
         public IActionResult GetCategory(int id)
         {
-            var category = CatRepo.FindOne(c => c.Id == id);
+            var category = CatRepository.FindOne(c => c.Id == id);
             if (category == null)
             {
                 return NotFound( new ApiErrorResponse(404));
@@ -49,18 +49,17 @@ namespace ShopperAPi.Controllers
                 return BadRequest(ModelState);
             }
 
-            var result = CatRepo.All().ToList();
-            bool check = result.Contains(category);
-            if (check)
+            var result = CatRepository.FindOne(c => c.Id == category.Id);
+            if (result != null)
             {
                 return BadRequest(result);
             }
             try
             {
-                CatRepo.Add(category);
-                CatRepo.SaveChanges();
-                string url = Url.Link("getRoute", new { id = category.Id });
-                return Created(url, category);
+                CatRepository.Add(category);
+                CatRepository.SaveChanges();
+                //string url = Url.Link("getRoute", new { id = category.Id });
+                return Created("lll", category);
             }
             catch (Exception ex)
             {
@@ -83,9 +82,9 @@ namespace ShopperAPi.Controllers
             try
             {
 
-                var result = (Category)CatRepo.Find(c => c.Id == id);
+                var result = CatRepository.FindOne(c => c.Id == id);
                 result.Name = category.Name;
-                CatRepo.SaveChanges();
+                CatRepository.SaveChanges();
                 return Ok(result);
             }
             catch (Exception ex)
@@ -98,13 +97,13 @@ namespace ShopperAPi.Controllers
         [HttpDelete("{id}")]
         public IActionResult DeleteCategory(int id)
         {
-            var result = CatRepo.Get(id);
+            var result = CatRepository.Get(id);
             if (result == null)
             {
-                return NotFound();
+                return NotFound(new ApiErrorResponse(404));
             }
-            CatRepo.Delete(result);
-            CatRepo.SaveChanges();
+            CatRepository.Delete(result);
+            CatRepository.SaveChanges();
             return Ok(result);
         }
     }
