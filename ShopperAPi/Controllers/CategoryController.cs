@@ -49,9 +49,8 @@ namespace ShopperAPi.Controllers
                 return BadRequest(ModelState);
             }
 
-            var result = CatRepository.All().ToList();
-            bool check = result.Contains(category);
-            if (check)
+            var result = CatRepository.FindOne(c => c.Id == category.Id);
+            if (result != null)
             {
                 return BadRequest(result);
             }

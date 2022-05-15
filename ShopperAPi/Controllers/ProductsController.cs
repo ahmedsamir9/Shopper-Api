@@ -2,6 +2,7 @@
 using Core.Entities;
 using Core.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using ShopperAPi.DTOS;
 using ShopperAPi.DTOS.ProductDTOs;
 using ShopperAPi.Errors;
@@ -72,30 +73,38 @@ namespace ShopperAPi.Controllers
         }
 
         // PUT api/<ProductsController>/5
-        //[HttpPut("{id}")]
-        //public IActionResult EditProducts(int id, [FromForm] Product category)
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return BadRequest(ModelState);
-        //    }
-        //    if (id != category.Id)
-        //    {
-        //        return BadRequest();
-        //    }
-        //    try
-        //    {
+        [HttpPut("{id}")]
+        public IActionResult EditProducts(int id, [FromForm] ProductMainpulationsDto product)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var result = ProductRepsitory.FindOne(c => c.Id == id);
+            if (result == null)
+            {
+                return NotFound(new ApiErrorResponse(404));
+            }
+            try
+            {
+                var resultProduct = _mapper.Map<Product>(product);
+                result.CategoryID = resultProduct.CategoryID;
+                result.Name = resultProduct.Name;
+                result.Description = resultProduct.Description;
+                result.ImagePath = resultProduct.ImagePath;
+                result.Price = resultProduct.Price;
+               result.NumberInStock = product.NumberInStock;
 
-        //        var result = CatRepo.FindOne(c => c.Id == id);
-        //        result.Name = category.Name;
-        //        CatRepo.SaveChanges();
-        //        return Ok(result);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return BadRequest(ex.Message);
-        //    }
-        //}
+                ProductRepsitory.Update(result);
+
+                ProductRepsitory.SaveChanges();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
 
         // DELETE api/<ProductsController>/5
         [HttpDelete("{id}")]
@@ -106,6 +115,7 @@ namespace ShopperAPi.Controllers
             {
                 return NotFound();
             }
+            ImageHandler.RemoveImage(result.ImagePath);
             ProductRepsitory.Delete(result);
             ProductRepsitory.SaveChanges();
             return Ok(result);

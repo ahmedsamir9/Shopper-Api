@@ -20,6 +20,18 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddScoped<IBaseRepository<Category>,CategoryRepository>();
 builder.Services.AddScoped<IBaseRepository<Product>, ProductRepository>();
 builder.Services.AddScoped<IImageHandler, ImageHandler>();
+string txt = "";
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(txt,
+    builder =>
+    {
+        builder.AllowAnyOrigin();
+        builder.AllowAnyMethod();
+        builder.AllowAnyHeader();
+    });
+});
+
 builder.Services.AddDbContext<AppDbContext>(op =>
 op.UseSqlServer(builder.Configuration.GetConnectionString("ShopperDb")));
 builder.Services.Configure<ApiBehaviorOptions> (options =>
@@ -53,6 +65,7 @@ app.UseStatusCodePagesWithReExecute("errors/{0}");
 app.UseStaticFiles();
 app.UseHttpsRedirection();
 app.UseRouting();
+app.UseCors(txt);
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
