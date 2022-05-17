@@ -18,7 +18,7 @@ namespace Inferastructure.Repositories
         }
         public override IEnumerable<Product> All()
         {
-            return Context.products.Include(p => p.Category).ToList();
+            return Context.products.AsQueryable().Include(p => p.Category).ToList();
         }
         public override Product Get(int id)
         {
