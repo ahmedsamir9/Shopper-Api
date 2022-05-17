@@ -75,10 +75,10 @@ namespace ShopperAPi.Controllers
             {
                 return BadRequest(ModelState);
             }
-            if (id != category.Id)
-            {
-                return BadRequest();
-            }
+            //if (id != category.Id)
+            //{
+            //    return BadRequest();
+            //}
             try
             {
 
