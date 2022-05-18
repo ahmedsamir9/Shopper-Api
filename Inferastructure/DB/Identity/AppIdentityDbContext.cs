@@ -13,6 +13,8 @@ namespace Inferastructure.Identity
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.Entity<AppUser>().Property(p => p.FullName).IsRequired().HasMaxLength(50);
+            builder.Entity<AppUser>().OwnsOne(a => a.Address, o =>
+              o.WithOwner());
             base.OnModelCreating(builder);
         }
     }
