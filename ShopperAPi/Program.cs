@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using ShopperAPi.Errors;
 using ShopperAPi.Helpers;
 using ShopperAPi.Middlewares;
+using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,7 +32,16 @@ builder.Services.AddCors(options =>
         builder.AllowAnyHeader();
     });
 });
+// add Redis DB
+builder.Services.AddSingleton<IConnectionMultiplexer>(op => {
 
+    var redisConfiguration = ConfigurationOptions.Parse(builder.Configuration
+        .GetConnectionString("Redis"), true);
+    return ConnectionMultiplexer.Connect(redisConfiguration);
+}
+);
+builder.Services.AddScoped<IBasketRepository, BasketRepository>();
+//add SQL DB 
 builder.Services.AddDbContext<AppDbContext>(op =>
 op.UseSqlServer(builder.Configuration.GetConnectionString("ShopperDb")));
 builder.Services.Configure<ApiBehaviorOptions> (options =>
