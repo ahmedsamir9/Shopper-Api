@@ -52,6 +52,7 @@ namespace Inferastructure.Services
                 Token = new JwtSecurityTokenHandler().WriteToken(token),
                 Expires = token.ValidTo
             }; 
+
         }
     }
 }

@@ -54,7 +54,21 @@ namespace ShopperAPi.Controllers
             if (!ValidIdentityResult(result))
                 return BadRequest(ModelState);
 
-            return Created("", await _tokenService.CreateToken(user));
+            TokenFormat token = await _tokenService.CreateToken(user);
+
+            AuthUserDto authUser = new()
+            {
+                FullName = user.FullName,
+                UserName = user.UserName,
+                Email = user.Email,
+                PhoneNumber = user.PhoneNumber,
+                Token = token.Token,
+                Expires = token.Expires,
+            };
+
+            authUser.Roles.Add(RolesConstantHelper.ClientRole);
+
+            return Created("", authUser);
         }
 
         [HttpPost("login")]
@@ -74,8 +88,22 @@ namespace ShopperAPi.Controllers
             if (!await _userManager.CheckPasswordAsync(user, loginUser.Password))
                 return BadRequest("Login Refused: Invalid User Name or Password");
 
+            TokenFormat token = await _tokenService.CreateToken(user);
 
-            return Ok(await _tokenService.CreateToken(user));
+            AuthUserDto authUser = new()
+            {
+                FullName = user.FullName,
+                UserName = user.UserName,
+                Email = user.Email,
+                PhoneNumber = user.PhoneNumber,
+                Token = token.Token,
+                Expires = token.Expires,
+            };
+
+            foreach (var role in await _userManager.GetRolesAsync(user))
+                authUser.Roles.Add(role);
+
+            return Ok(authUser);
         }
 
         [HttpGet("emailexists")]
