@@ -1,4 +1,5 @@
 ﻿using Core.Interfaces;
+using Inferastructure.DB;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,7 @@ namespace Inferastructure.Repositories
     public abstract class GenericRepository<T>
         : IBaseRepository<T> where T : class
     {
-        public GenericRepository(DbContext _Context)
+        public GenericRepository(AppDbContext _Context)
         {
             Context = _Context;
         }
@@ -28,7 +29,9 @@ namespace Inferastructure.Repositories
 
         public virtual IEnumerable<T> Find(Expression<Func<T, bool>> predicate)
         {
-
+            var x = Context.Set<T>()
+                .AsQueryable();
+            x.Include("sas");
             return Context.Set<T>()
                 .AsQueryable()
                 .Where(predicate).ToList();

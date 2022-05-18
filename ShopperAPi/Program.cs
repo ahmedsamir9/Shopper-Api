@@ -1,4 +1,11 @@
+
 using Microsoft.AspNetCore.Identity;
+
+using Core.Entities;
+using Core.Interfaces;
+using Inferastructure.DB;
+using Inferastructure.Repositories;
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -9,6 +16,7 @@ using Inferastructure.DB;
 using Inferastructure.Identity;
 using Inferastructure.Services;
 using ShopperAPi.Errors;
+using ShopperAPi.Helpers;
 using ShopperAPi.Middlewares;
 using System.Text;
 
@@ -21,7 +29,22 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 
-builder.Services.AddCors();
+
+
+builder.Services.AddScoped<IBaseRepository<Category>,CategoryRepository>();
+builder.Services.AddScoped<IBaseRepository<Product>, ProductRepository>();
+builder.Services.AddScoped<IImageHandler, ImageHandler>();
+string txt = "";
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(txt,
+    builder =>
+    {
+        builder.AllowAnyOrigin();
+        builder.AllowAnyMethod();
+        builder.AllowAnyHeader();
+    });
+});
 
 builder.Services.AddDbContext<AppDbContext>(op =>
     op.UseSqlServer(builder.Configuration.GetConnectionString("ShopperDb")));
@@ -86,22 +109,15 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 app.UseMiddleware<CustomExceptionMiddleware>();
-app.UseStaticFiles();
 app.UseStatusCodePagesWithReExecute("errors/{0}");
-
+app.UseStaticFiles();
 app.UseHttpsRedirection();
-
 app.UseRouting();
 
-app.UseCors(builder =>
-{
-    builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
-});
+app.UseCors(txt);
 
 app.UseAuthentication();
-
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();

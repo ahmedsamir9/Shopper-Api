@@ -20,7 +20,7 @@ namespace Inferastructure.DB.config
             builder.Property(x => x.ImagePath).IsRequired();
             builder.Property(x => x.Rate).HasDefaultValue(0);
             builder.Property(x=>x.NumberInStock).HasDefaultValue(0).IsRequired();
-            builder.HasOne(x => x.category).WithMany(c => c.Products);
+            builder.HasOne(x => x.Category).WithMany(c=> c.Products).HasForeignKey(p =>p.CategoryID);
         }
     }
 }
