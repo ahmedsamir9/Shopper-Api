@@ -28,4 +28,7 @@
     <ProjectReference Include="..\Inferastructure\Inferastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Profiles\" />
+  </ItemGroup>
 </Project>
