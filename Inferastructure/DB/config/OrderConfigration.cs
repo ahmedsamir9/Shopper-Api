@@ -15,12 +15,13 @@ namespace Inferastructure.DB.config
         {
             builder.HasKey(x => x.OrderId);
             builder.Property(x => x.OrderDate).IsRequired();
-           // builder.Property(x => x.ShippedAddress).IsRequired();
+           
             builder.Property(x=>x.UserEmail).IsRequired();
             builder.OwnsOne(o => o.ShippedAddress, a =>
             {
                 a.WithOwner();
             });
+            //builder.HasMany(e => e.OrderItems).WithOne(o => o.Order);
         }
     }
 }

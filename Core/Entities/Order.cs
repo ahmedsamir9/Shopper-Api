@@ -13,6 +13,6 @@ namespace Core.Entities
         public OrderState OrderState { get; set; } = OrderState.Pendding;
         public DateTimeOffset OrderDate { get; set; } = DateTimeOffset.Now;
         public Address ShippedAddress { get; set; }
-        public List<BasketItem> OrderItems { get; set; } = new List<BasketItem>();
+        public List<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
     }
 }

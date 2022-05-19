@@ -28,10 +28,10 @@ namespace ShopperAPi.Middlewares
             {
                 _logger.LogError(e , e.Message);
                 context.Response.ContentType = "application/json";
-                context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                 
                 var response = _environment.IsDevelopment()
-             ? new ApiException((int)HttpStatusCode.InternalServerError, e.Message, e.StackTrace.ToString())
-             : new ApiException((int)HttpStatusCode.InternalServerError, e.Message, e.StackTrace.ToString());
+             ? new ApiException((int)context.Response.StatusCode, e.Message, e.StackTrace.ToString())
+             : new ApiException((int)context.Response.StatusCode, e.Message, e.StackTrace.ToString());
 
                 var options = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
 

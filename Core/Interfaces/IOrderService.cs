@@ -9,8 +9,13 @@ namespace Core.Interfaces
 {
     public interface IOrderService
     {
-        Task<Order> CreateOrderAsync(Address shippingAddress);
-        Task<IReadOnlyList<Order>> GetOrdersForUserAsync();
-        Task<Order> GetOrderByIdAsync(int orderId);
+        void saveChanges();
+        Order createOrderAsync(Address shippingAddress,string userEmail, string basketId);
+        IReadOnlyList<Order> getOrdersForUser(string userEmail);
+        IReadOnlyList<Order> getAllOrders();
+
+         Order? getOrderById(int orderId);
+        bool removeOrder(int orderId);
+       Task <Tuple<bool, List<string>>> isProductsAvalibleAyncAsync(string basketId);
     }
 }
