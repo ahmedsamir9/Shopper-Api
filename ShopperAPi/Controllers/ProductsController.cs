@@ -1,12 +1,14 @@
 ﻿using AutoMapper;
 using Core.Entities;
 using Core.Interfaces;
+using Core.Specifications;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ShopperAPi.DTOS;
 using ShopperAPi.DTOS.ProductDTOs;
 using ShopperAPi.Errors;
 using ShopperAPi.Helpers;
+using ShopperAPi.Resources_Params;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -16,11 +18,11 @@ namespace ShopperAPi.Controllers
     [ApiController]
     public class ProductsController : ControllerBase
     {
-        private readonly IBaseRepository<Product> ProductRepsitory;
+        private readonly IProductRepository ProductRepsitory;
         private readonly IImageHandler ImageHandler;
         private readonly IMapper _mapper;
 
-        public ProductsController(IBaseRepository<Product> prdrepo, IImageHandler imageHandler,IMapper mapper)
+        public ProductsController(IProductRepository prdrepo, IImageHandler imageHandler,IMapper mapper)
         {
             this.ProductRepsitory = prdrepo;
             ImageHandler = imageHandler;
@@ -48,6 +50,33 @@ namespace ShopperAPi.Controllers
             return Ok(product);
         }
 
+        [HttpGet("{id:int}/relatedproducts")]
+        public IActionResult GetRelatedProducts(int id)
+        {
+            var product = _mapper.Map<ProductDto>(ProductRepsitory.Get(id));
+            if(product == null) return NotFound(new ApiErrorResponse(404));
+            var productSpec = new RelatedProductSpec(product.CategoryName,product.Id);
+            var products = _mapper.Map<List<ProductDto>>(ProductRepsitory.getRelatedProduct(productSpec));
+            if (products == null || products.Count == 0)
+            {
+                return NotFound(new ApiErrorResponse(404));
+            }
+
+            return Ok(products);
+        }
+        [HttpGet("/PagedProducts")]
+        public IActionResult GetProducts([FromQuery]ProductParams productParams)
+        {
+            var productSpec = new PagedProductSpec(productParams.CategoryName,productParams.PageSize 
+                ,productParams.PageNumber.Value,productParams.maxPrice,productParams.miniPrice,productParams.rate);
+            var productCountSpec = new CountPagedProduct(productParams.CategoryName
+                , productParams.maxPrice, productParams.miniPrice, productParams.rate);
+            var products = _mapper.Map<List<ProductDto>>(ProductRepsitory.getRelatedProduct(productSpec));
+            var count = ProductRepsitory.getPagesCount(productCountSpec);
+           
+            var pagedList = new PagingList<ProductDto>(productParams.PageNumber.Value, productParams.PageSize, count, products);
+            return Ok(pagedList);
+        }
         // POST api/<ProductsController>
         [HttpPost]
 

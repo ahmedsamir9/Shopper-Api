@@ -16,6 +16,6 @@ namespace Core.Interfaces
 
          Order? getOrderById(int orderId);
         bool removeOrder(int orderId);
-       Task <Tuple<bool, List<string>>> isProductsAvalibleAyncAsync(string basketId);
+        Task <Tuple<bool, List<string>>> isProductsAvalibleAync(string basketId);
     }
 }

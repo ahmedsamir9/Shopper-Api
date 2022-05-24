@@ -13,7 +13,7 @@ namespace Inferastructure.Repositories
     {
         public static IQueryable<T> GetQuery(IQueryable<T> inputQuery, ISpecification<T> spec)
         {
-            var query = inputQuery;
+            IQueryable<T> query = inputQuery;
 
             if (spec.WhereCriteria != null)
             {
@@ -33,9 +33,12 @@ namespace Inferastructure.Repositories
 
             if (spec.IsPagingEnabled)
             {
-                query = query.Skip(spec.Skip).Take(spec.Take);
+                query = query.Skip((spec.Skip -1)*spec.Take).Take(spec.Take);
             }
-            query = spec.Includes?.Aggregate(query, (current, include) => current.Include(include));
+            spec.Includes?.ForEach(e=> {
+
+                query = query.Include(e);
+            });
             return query;
         }
     }

@@ -47,7 +47,7 @@ namespace ShopperAPi.Controllers
         public async Task<IActionResult> Post(UserOrderDto userOrder)
         {
             string basketId = "sss";
-            var isProductAvalible = await _orderService.isProductsAvalibleAyncAsync(basketId);
+            var isProductAvalible = await _orderService.isProductsAvalibleAync(basketId);
             if (!isProductAvalible.Item1) {
                 isProductAvalible.Item2.ForEach(e =>
                 {
