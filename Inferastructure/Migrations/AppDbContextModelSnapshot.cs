@@ -22,38 +22,6 @@ namespace Inferastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("Core.Entities.BasketItem", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int?>("OrderId")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("ProductImage")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ProductName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("OrderId");
-
-                    b.ToTable("BasketItem");
-                });
-
             modelBuilder.Entity("Core.Entities.Category", b =>
                 {
                     b.Property<int>("Id")
@@ -92,6 +60,41 @@ namespace Inferastructure.Migrations
                     b.HasKey("OrderId");
 
                     b.ToTable("Orders");
+                });
+
+            modelBuilder.Entity("Core.Entities.OrderItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("OrderId")
+                        .HasColumnType("int");
+
+                    b.Property<float>("Price")
+                        .HasColumnType("real");
+
+                    b.Property<int>("ProductIdInDb")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ProductImage")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ProductName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderId");
+
+                    b.ToTable("OrderItem");
                 });
 
             modelBuilder.Entity("Core.Entities.Product", b =>
@@ -137,13 +140,6 @@ namespace Inferastructure.Migrations
                     b.ToTable("products");
                 });
 
-            modelBuilder.Entity("Core.Entities.BasketItem", b =>
-                {
-                    b.HasOne("Core.Entities.Order", null)
-                        .WithMany("OrderItems")
-                        .HasForeignKey("OrderId");
-                });
-
             modelBuilder.Entity("Core.Entities.Order", b =>
                 {
                     b.OwnsOne("Core.Entities.Address", "ShippedAddress", b1 =>
@@ -177,6 +173,17 @@ namespace Inferastructure.Migrations
 
                     b.Navigation("ShippedAddress")
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Core.Entities.OrderItem", b =>
+                {
+                    b.HasOne("Core.Entities.Order", "Order")
+                        .WithMany("OrderItems")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Order");
                 });
 
             modelBuilder.Entity("Core.Entities.Product", b =>

@@ -11,7 +11,7 @@ namespace Inferastructure.Repositories
 {
     public class ProductRepository : GenericRepository<Product>
     {
-        public AppDbContext Context { get; }
+        private AppDbContext Context { get; }
         public ProductRepository(AppDbContext _Context) : base(_Context)
         {
             Context = _Context;
@@ -22,11 +22,8 @@ namespace Inferastructure.Repositories
         }
         public override Product Get(int id)
         {
-
-
             var product = Context.products.Include(p => p.Category).FirstOrDefault(p => p.Id == id);
-            return product;
-           
+            return product;  
         }
     }
 }

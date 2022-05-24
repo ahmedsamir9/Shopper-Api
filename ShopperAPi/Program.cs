@@ -1,46 +1,44 @@
 
 using Microsoft.AspNetCore.Identity;
-
 using Core.Entities;
 using Core.Interfaces;
 using Inferastructure.DB;
 using Inferastructure.Repositories;
-
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Core.Entities.Identity;
-using Core.Interfaces;
-using Inferastructure.DB;
 using Inferastructure.Identity;
 using Inferastructure.Services;
 using ShopperAPi.Errors;
 using ShopperAPi.Helpers;
 using ShopperAPi.Middlewares;
-
 using StackExchange.Redis;
 using System.Text;
-
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
 var  MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 // Add services to the container.
 
-builder.Services.AddControllers();
+
+builder.Services.AddControllers().AddNewtonsoftJson(options =>
+    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+); ;
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 
 
-
+builder.Services.AddScoped<IOrderService,OrderService>();
 builder.Services.AddScoped<IBaseRepository<Category>,CategoryRepository>();
 builder.Services.AddScoped<IBaseRepository<Product>, ProductRepository>();
 builder.Services.AddScoped<IImageHandler, ImageHandler>();
-string txt = "";
+string policy = "All";
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy(txt,
+    options.AddPolicy(policy,
     builder =>
     {
         builder.AllowAnyOrigin();
@@ -106,7 +104,27 @@ builder.Services.Configure<ApiBehaviorOptions> (options =>
     };
 });
 
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(swagger =>
+{
+    //This is to generate the Default UI of Swagger Documentation
+    swagger.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Version = "v1",
+        Title = "ASP.NET 5 Web API",
+        Description = " ITI Projrcy"
+    });
+    // To Enable authorization using Swagger (JWT)
+    swagger.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "Enter 'Bearer' [space] and then your valid token in the text input below.\r\n\r\nExample: \"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9\"",
+
+    });
+});
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
@@ -126,7 +144,7 @@ app.UseStaticFiles();
 app.UseHttpsRedirection();
 app.UseRouting();
 
-app.UseCors(txt);
+app.UseCors(policy);
 
 app.UseAuthentication();
 app.UseAuthorization();
