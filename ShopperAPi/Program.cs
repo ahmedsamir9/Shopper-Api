@@ -33,7 +33,7 @@ builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddScoped<IOrderService,OrderService>();
 builder.Services.AddScoped<IBaseRepository<Category>,CategoryRepository>();
-builder.Services.AddScoped<IBaseRepository<Product>, ProductRepository>();
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IImageHandler, ImageHandler>();
 string policy = "All";
 builder.Services.AddCors(options =>

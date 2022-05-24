@@ -41,7 +41,7 @@ namespace ShopperAPi.Controllers
 
         // POST api/<CategoryController>
         [HttpPost]
-        public IActionResult PostCategories([FromForm] Category category)
+        public IActionResult PostCategories(string name)
         {
 
             if (!ModelState.IsValid)
@@ -49,13 +49,14 @@ namespace ShopperAPi.Controllers
                 return BadRequest(ModelState);
             }
 
-            var result = CatRepository.FindOne(c => c.Id == category.Id);
+            var result = CatRepository.FindOne(c => c.Name == name);
             if (result != null)
             {
                 return BadRequest(result);
             }
             try
             {
+                var category = new Category() { Name = name};
                 CatRepository.Add(category);
                 CatRepository.SaveChanges();
                 //string url = Url.Link("getRoute", new { id = category.Id });

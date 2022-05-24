@@ -34,7 +34,7 @@ namespace ShopperAPi.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<CustomerBasket>> AddToBasketBasket(BasketItem basketItem)
+        public async Task<ActionResult<Basket>> AddToBasketBasket(BasketItem basketItem)
         {
             //var basketId = _currentUserData.Item1.hashStrings(_currentUserData.Item2);
             var basketId = "sss";

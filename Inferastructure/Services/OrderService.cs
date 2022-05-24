@@ -14,10 +14,10 @@ namespace Inferastructure.Services
     {
         private readonly AppDbContext _appDbContext;
         private readonly  IBasketRepository _basketRepository;
-        private readonly IBaseRepository<Product> _productRepository;
+        private readonly IProductRepository _productRepository;
 
         public OrderService(AppDbContext appDbContext
-            , IBasketRepository basketRepository, IBaseRepository<Product> productRepository)
+            , IBasketRepository basketRepository, IProductRepository productRepository)
         {
             _appDbContext = appDbContext;
             _basketRepository = basketRepository;
@@ -77,7 +77,7 @@ namespace Inferastructure.Services
         }
 
         
-        async Task<Order> IOrderService.createOrderAsync(Address shippingAddress, string userEmail, string basketId)
+        public async Task<Order> createOrderAsync(Address shippingAddress, string userEmail, string basketId)
         {
 
             var order = new Order()
@@ -97,7 +97,7 @@ namespace Inferastructure.Services
 
         }
 
-        async Task<Tuple<bool, List<string>>> IOrderService.isProductsAvalibleAyncAsync(string basketId)
+     public async Task<Tuple<bool, List<string>>> isProductsAvalibleAync(string basketId)
         {
             var errorList = new List<string>();
             var dataInBasket = await _basketRepository.getBasketAsync(basketId);
