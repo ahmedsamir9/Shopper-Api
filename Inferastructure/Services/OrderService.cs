@@ -31,24 +31,7 @@ namespace Inferastructure.Services
         private List<Product> _products { get; set; }
         private List<OrderItem> _basketItems { get; set; }
 
-        public async Task<Order> createOrderAsync(Address shippingAddress, string userEmail ,string basketId)
-        {
-            var order = new Order()
-            {
-                ShippedAddress = shippingAddress,
-                UserEmail = userEmail,
-                OrderItems = _basketItems
-            };
-            _appDbContext.Orders.Add(order);
-
-            _products.ForEach(p =>
-            {
-                _productRepository.Update(p);
-            });
-            await _basketRepository.deleteBasketAsync(basketId);
-            return order;
-        }
-
+        
         public IReadOnlyList<Order> getAllOrders()
         {
             return _appDbContext.Orders.Include(o => o.OrderItems)
@@ -91,6 +74,27 @@ namespace Inferastructure.Services
         public void saveChanges()
         {
             _appDbContext.SaveChanges();
+        }
+
+        
+        async Task<Order> IOrderService.createOrderAsync(Address shippingAddress, string userEmail, string basketId)
+        {
+
+            var order = new Order()
+            {
+                ShippedAddress = shippingAddress,
+                UserEmail = userEmail,
+                OrderItems = _basketItems
+            };
+            _appDbContext.Orders.Add(order);
+
+            _products.ForEach(p =>
+            {
+                _productRepository.Update(p);
+            });
+            await _basketRepository.deleteBasketAsync(basketId);
+            return order;
+
         }
 
         async Task<Tuple<bool, List<string>>> IOrderService.isProductsAvalibleAyncAsync(string basketId)

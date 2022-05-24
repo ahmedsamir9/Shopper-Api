@@ -10,7 +10,7 @@ namespace Core.Interfaces
     public interface IOrderService
     {
         void saveChanges();
-        Order createOrderAsync(Address shippingAddress,string userEmail, string basketId);
+        Task<Order> createOrderAsync(Address shippingAddress,string userEmail, string basketId);
         IReadOnlyList<Order> getOrdersForUser(string userEmail);
         IReadOnlyList<Order> getAllOrders();
 

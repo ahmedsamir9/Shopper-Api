@@ -1,23 +1,19 @@
 
 using Microsoft.AspNetCore.Identity;
-
 using Core.Entities;
 using Core.Interfaces;
 using Inferastructure.DB;
 using Inferastructure.Repositories;
-
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Core.Entities.Identity;
-
 using Inferastructure.Identity;
 using Inferastructure.Services;
 using ShopperAPi.Errors;
 using ShopperAPi.Helpers;
 using ShopperAPi.Middlewares;
-
 using StackExchange.Redis;
 using System.Text;
 using Microsoft.OpenApi.Models;
@@ -39,10 +35,10 @@ builder.Services.AddScoped<IOrderService,OrderService>();
 builder.Services.AddScoped<IBaseRepository<Category>,CategoryRepository>();
 builder.Services.AddScoped<IBaseRepository<Product>, ProductRepository>();
 builder.Services.AddScoped<IImageHandler, ImageHandler>();
-string txt = "";
+string policy = "All";
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy(txt,
+    options.AddPolicy(policy,
     builder =>
     {
         builder.AllowAnyOrigin();
@@ -142,13 +138,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-//app.UseMiddleware<CustomExceptionMiddleware>();
-//app.UseStatusCodePagesWithReExecute("errors/{0}");
+app.UseMiddleware<CustomExceptionMiddleware>();
+app.UseStatusCodePagesWithReExecute("errors/{0}");
 app.UseStaticFiles();
 app.UseHttpsRedirection();
 app.UseRouting();
 
-app.UseCors(txt);
+app.UseCors(policy);
 
 app.UseAuthentication();
 app.UseAuthorization();

@@ -25,9 +25,9 @@ namespace ShopperAPi.Controllers
         [HttpGet(Name ="getBasket")]
         public async Task<ActionResult<Basket>> GetBasketForUser()
         {
-            _currentUserData = User.Claims.getCurrentUserIdAndEmail();
+            //_currentUserData = User.Claims.getCurrentUserIdAndEmail();
 
-            var basketId = _currentUserData.Item1.hashStrings(_currentUserData.Item2);
+            var basketId = "sss";
             var basket = await _basketRepository.getBasketAsync(basketId);
             if (basket == null) return BadRequest(new ApiErrorResponse(400, "You got No Basket"));
             return Ok(basket);
