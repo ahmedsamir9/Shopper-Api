@@ -21,12 +21,14 @@ namespace ShopperAPi.Controllers
         private readonly IProductRepository ProductRepsitory;
         private readonly IImageHandler ImageHandler;
         private readonly IMapper _mapper;
-
-        public ProductsController(IProductRepository prdrepo, IImageHandler imageHandler,IMapper mapper)
+        private readonly IBaseRepository<Category> _categoryRepository;
+        public ProductsController(IProductRepository prdrepo, IImageHandler imageHandler, IBaseRepository<Category> categoryRepo, IMapper mapper)
         {
             this.ProductRepsitory = prdrepo;
             ImageHandler = imageHandler;
             _mapper = mapper;
+            this._categoryRepository = categoryRepo;
+
         }
         // GET: api/<ProductsController>
         [HttpGet]
@@ -79,8 +81,6 @@ namespace ShopperAPi.Controllers
         }
         // POST api/<ProductsController>
         [HttpPost]
-
-
         public IActionResult PostProducts([FromForm] ProductMainpulationsDto product)
         {
          
@@ -100,7 +100,14 @@ namespace ShopperAPi.Controllers
                 return BadRequest(new ApiErrorResponse(400,ex.Message));
             }
         }
-
+        [HttpGet("/{categoryName}/ProductsCount")]
+        public IActionResult GetProductCountInCategory(string categoryName)
+        {
+            var catgeory = _categoryRepository.FindOne(c=> c.Name == categoryName);
+            if (catgeory == null) return NotFound(new ApiErrorResponse(404));
+            var count = ProductRepsitory.getProductsCountInCategory(catgeory.Id);
+            return Ok(count);
+        }
         // PUT api/<ProductsController>/5
         [HttpPut("{id}")]
         public IActionResult EditProducts(int id, [FromForm] ProductMainpulationsDto product)
@@ -124,6 +131,29 @@ namespace ShopperAPi.Controllers
                 result.Price = resultProduct.Price;
                result.NumberInStock = product.NumberInStock;
 
+                ProductRepsitory.Update(result);
+
+                ProductRepsitory.SaveChanges();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpPut("{id}/Rate")]
+        public IActionResult EditProducts(int id, int newRate)
+        {
+           
+            var result = ProductRepsitory.FindOne(c => c.Id == id);
+            if (result == null)
+            {
+                return NotFound(new ApiErrorResponse(404));
+            }
+            try
+            {
+                float rate = (result.Rate + newRate) / 2;
+                result.Rate = rate;
                 ProductRepsitory.Update(result);
 
                 ProductRepsitory.SaveChanges();

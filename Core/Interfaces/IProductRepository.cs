@@ -13,6 +13,6 @@ namespace Core.Interfaces
         List<Product> getRelatedProduct(BaseSpecification<Product> productSpec);
         List<Product> getPagedProduct(BaseSpecification<Product> productSpec);
         int getPagesCount(BaseSpecification<Product> productSpec);
-        
+        int getProductsCountInCategory(int categoryName);
     }
 }

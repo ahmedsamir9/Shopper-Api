@@ -49,5 +49,10 @@ namespace Inferastructure.Repositories
             //var finalQuery = query ?? Context.products.AsQueryable();
             return SpecificationEvaluator<Product>.GetQuery(query, productSpec).Count();
         }
+
+        public int getProductsCountInCategory(int categoryID)
+        {
+            return Context.products.Where(c=>c.CategoryID == categoryID).Count();
+        }
     }
 }
