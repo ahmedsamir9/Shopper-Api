@@ -14,5 +14,7 @@ namespace Core.Entities
         public DateTimeOffset OrderDate { get; set; } = DateTimeOffset.Now;
         public Address ShippedAddress { get; set; }
         public List<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
+        public float TotalPrice { get; set; }
+
     }
 }

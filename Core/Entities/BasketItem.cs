@@ -13,7 +13,7 @@ namespace Core.Entities
             public float Price { get; set; }
             public int Quantity { get; set; }
             public string ProductImage { get; set; }
-          
+            public int NumberInStock { get; set; }
         public override bool Equals(object? obj)
         {
             var item = obj as BasketItem;

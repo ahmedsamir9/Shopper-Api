@@ -76,15 +76,20 @@ namespace Inferastructure.Services
             _appDbContext.SaveChanges();
         }
 
-        
+
         public async Task<Order> createOrderAsync(Address shippingAddress, string userEmail, string basketId)
         {
-
+            float total = 0.0f;
+            _basketItems.ForEach(o => {
+                total += (o.Price * o.Quantity);
+            
+            });
             var order = new Order()
             {
                 ShippedAddress = shippingAddress,
                 UserEmail = userEmail,
-                OrderItems = _basketItems
+                OrderItems = _basketItems,
+                TotalPrice = total
             };
             _appDbContext.Orders.Add(order);
 
