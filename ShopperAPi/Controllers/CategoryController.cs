@@ -44,7 +44,7 @@ namespace ShopperAPi.Controllers
         // POST api/<CategoryController>
         [Authorize(Roles =RolesConstantHelper.AdminRole)]
         [HttpPost]
-        public IActionResult PostCategories([FromBody]string name)
+        public IActionResult PostCategories([FromForm]string name)
         {
 
             if (!ModelState.IsValid)
