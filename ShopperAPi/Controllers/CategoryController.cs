@@ -1,5 +1,7 @@
 ﻿using Core.Entities;
+using Core.Helpers;
 using Core.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ShopperAPi.Errors;
 
@@ -40,6 +42,7 @@ namespace ShopperAPi.Controllers
         }
 
         // POST api/<CategoryController>
+        [Authorize(Roles =RolesConstantHelper.AdminRole)]
         [HttpPost]
         public IActionResult PostCategories(string name)
         {
@@ -69,6 +72,7 @@ namespace ShopperAPi.Controllers
         }
 
         // PUT api/<CategoryController>/5
+        [Authorize(Roles =RolesConstantHelper.AdminRole)]
         [HttpPut("{id}")]
         public IActionResult EditCategories(int id, [FromForm] Category category)
         {
@@ -94,6 +98,7 @@ namespace ShopperAPi.Controllers
             }
         }
 
+        [Authorize(Roles =RolesConstantHelper.AdminRole)]
         // DELETE api/<CategoryController>/5
         [HttpDelete("{id}")]
         public IActionResult DeleteCategory(int id)

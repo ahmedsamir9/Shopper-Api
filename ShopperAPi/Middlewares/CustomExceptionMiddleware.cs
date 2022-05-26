@@ -31,7 +31,7 @@ namespace ShopperAPi.Middlewares
                  
                 var response = _environment.IsDevelopment()
              ? new ApiException((int)context.Response.StatusCode, e.Message, e.StackTrace.ToString())
-             : new ApiException((int)context.Response.StatusCode, e.Message, e.StackTrace.ToString());
+             : new ApiErrorResponse((int)context.Response.StatusCode);
 
                 var options = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
 

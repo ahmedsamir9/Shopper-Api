@@ -1,14 +1,18 @@
 ﻿using AutoMapper;
 using Core.Entities;
+using Core.Helpers;
 using Core.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ShopperAPi.DTOS.OrderDto;
 using ShopperAPi.Errors;
+using ShopperAPi.Helpers;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace ShopperAPi.Controllers
 {
+    [Authorize(Roles =$"{RolesConstantHelper.AdminRole},{RolesConstantHelper.ClientRole}")]
     [Route("api/[controller]")]
     [ApiController]
     public class OrderController : ControllerBase
@@ -46,16 +50,17 @@ namespace ShopperAPi.Controllers
         [HttpPost]
         public async Task<IActionResult> Post(UserOrderDto userOrder)
         {
-            string basketId = "sss";
+            var _currentUserData = User.Claims.getCurrentUserIdAndEmail();
+            var basketId = _currentUserData.Item1.hashStrings(_currentUserData.Item2);
             var isProductAvalible = await _orderService.isProductsAvalibleAync(basketId);
             if (!isProductAvalible.Item1) {
                 isProductAvalible.Item2.ForEach(e =>
                 {
-                    ModelState.AddModelError(e, e);
+                    ModelState.AddModelError("",e);
                 });
                 return BadRequest(ModelState);
             }
-            var order = _orderService.createOrderAsync(_mapper.Map<Address>(userOrder.Address)
+            var order = await _orderService.createOrderAsync(_mapper.Map<Address>(userOrder.Address)
                 ,userOrder.UserEmail,basketId);
             _orderService.saveChanges();
             return Created("", order);
