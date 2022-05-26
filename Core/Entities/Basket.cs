@@ -10,5 +10,6 @@ namespace Core.Entities
     {
         public string Id { get; set; }
         public List<BasketItem> Items { get; set; } = new List<BasketItem>();
+        public float TotalPrice { get; set; } = 0.0f;
     }
 }

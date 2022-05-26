@@ -60,7 +60,7 @@ namespace ShopperAPi.Controllers
             var basketId = _currentUserData.Item1.hashStrings(_currentUserData.Item2);
             var basket = await _basketRepository.deleteFromBasketAsync(basketId,id);
             if(basket == null) return NotFound(new ApiErrorResponse(404,"the Item is not in basket"));
-            return NoContent();
+            return Ok(basket);
         }
 
         [HttpPut("{id}")]
@@ -70,7 +70,7 @@ namespace ShopperAPi.Controllers
             var basketId = _currentUserData.Item1.hashStrings(_currentUserData.Item2);
             var basket = await _basketRepository.updateBasketItemAsync(basketId, basketItem);
             if (basket == null) return NotFound(new ApiErrorResponse(404));
-            return NoContent();
+            return Ok(basket);
         }
     }
 }
