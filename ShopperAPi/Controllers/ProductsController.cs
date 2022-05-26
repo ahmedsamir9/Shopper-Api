@@ -34,6 +34,7 @@ namespace ShopperAPi.Controllers
         }
         // GET: api/<ProductsController>
         [HttpGet]
+        [ProducesResponseType(typeof(List<ProductDto>), 200)]
         public IActionResult GetProducts()
         {
             var result = ProductRepsitory.All()
@@ -43,6 +44,8 @@ namespace ShopperAPi.Controllers
 
         // GET api/<ProductsController>/5
         [HttpGet("{id:int}" ,Name ="getProduct")]
+        [ProducesResponseType(typeof(ProductDto), 200)]
+        [ProducesResponseType(typeof(ApiErrorResponse), 404)]
         public IActionResult GetProducts(int id)
         {
             var product = _mapper.Map<ProductDto>(ProductRepsitory.Get(id));
@@ -55,6 +58,8 @@ namespace ShopperAPi.Controllers
         }
 
         [HttpGet("{id:int}/relatedproducts")]
+        [ProducesResponseType(typeof(ProductDto), 200)]
+        [ProducesResponseType(typeof(ApiErrorResponse), 404)]
         public IActionResult GetRelatedProducts(int id)
         {
             var product = _mapper.Map<ProductDto>(ProductRepsitory.Get(id));
@@ -69,6 +74,8 @@ namespace ShopperAPi.Controllers
             return Ok(products);
         }
         [HttpGet("/PagedProducts")]
+        [ProducesResponseType(typeof(ProductDto), 200)]
+        [ProducesResponseType(typeof(ApiErrorResponse), 404)]
         public IActionResult GetProducts([FromQuery]ProductParams productParams)
         {
             var productSpec = new PagedProductSpec(productParams.CategoryName,productParams.PageSize 
@@ -84,6 +91,9 @@ namespace ShopperAPi.Controllers
         // POST api/<ProductsController>
         [Authorize(Roles =RolesConstantHelper.AdminRole)]
         [HttpPost]
+        [ProducesResponseType(typeof(ProductDto), 200)]
+       
+        [ProducesResponseType(typeof(ApiErrorResponse), 400)]
         public IActionResult PostProducts([FromForm] ProductMainpulationsDto product)
         {
          
@@ -104,6 +114,9 @@ namespace ShopperAPi.Controllers
             }
         }
         [HttpGet("/{categoryName}/ProductsCount")]
+        [ProducesResponseType(typeof(ProductDto), 200)]
+        [ProducesResponseType(typeof(ApiErrorResponse), 404)]
+     
         public IActionResult GetProductCountInCategory(string categoryName)
         {
             var catgeory = _categoryRepository.FindOne(c=> c.Name == categoryName);
@@ -114,6 +127,9 @@ namespace ShopperAPi.Controllers
         // PUT api/<ProductsController>/5
         [Authorize(Roles =RolesConstantHelper.AdminRole)]
         [HttpPut("{id}")]
+        [ProducesResponseType(typeof(ProductDto), 200)]
+        [ProducesResponseType(typeof(ApiErrorResponse), 404)]
+        [ProducesResponseType(typeof(ApiErrorResponse), 400)]
         public IActionResult EditProducts(int id, [FromForm] ProductMainpulationsDto product)
         {
             if (!ModelState.IsValid)
@@ -173,6 +189,8 @@ namespace ShopperAPi.Controllers
         // DELETE api/<ProductsController>/5
         [Authorize(Roles =RolesConstantHelper.AdminRole)]
         [HttpDelete("{id}")]
+        [ProducesResponseType(typeof(ProductDto), 200)]
+        [ProducesResponseType(typeof(ApiErrorResponse), 404)]
         public IActionResult DeleteProducts(int id)
         {
             var result = ProductRepsitory.Get(id);
