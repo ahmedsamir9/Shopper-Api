@@ -101,6 +101,9 @@ namespace ShopperAPi.Controllers
         [Authorize(Roles =RolesConstantHelper.AdminRole)]
         // DELETE api/<CategoryController>/5
         [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(ApiErrorResponse), 404)]
+        
         public IActionResult DeleteCategory(int id)
         {
             var result = CatRepository.Get(id);
@@ -110,7 +113,7 @@ namespace ShopperAPi.Controllers
             }
             CatRepository.Delete(result);
             CatRepository.SaveChanges();
-            return Ok(result);
+            return NoContent();
         }
     }
 }
