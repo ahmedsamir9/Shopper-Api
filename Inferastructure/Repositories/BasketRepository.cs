@@ -23,16 +23,18 @@ namespace Inferastructure.Repositories
         {
 
             var data = await getBasketAsync(basketId);
+            var total = basketItem.Price*basketItem.Quantity;
             if (data == null)
             {
                 data = new Basket()
                 {
-                    Id = basketId
+                    Id = basketId,
                 };
             }
 
             if (!data.Items.Contains(basketItem)) {
                 data.Items.Add(basketItem);
+                data.TotalPrice += total;
                 if (!await addDataToRedis(data)) return null;
             } 
             return data;
@@ -49,6 +51,7 @@ namespace Inferastructure.Repositories
             if (data == null) return null;
             var basketItem = data.Items.FirstOrDefault(x => x.Id == itemId);
             if (basketItem == null) return null;
+            data.TotalPrice -= basketItem.Price*basketItem.Quantity;
             data.Items.Remove(basketItem);
             await addDataToRedis(data);
             return data;
@@ -70,8 +73,10 @@ namespace Inferastructure.Repositories
             {
                 if(data.Items[i].Id == basketItem.Id)
                 {
+                    data.TotalPrice -= data.Items[i].Price*data.Items[i].Quantity;
                     data.Items.RemoveAt(i);
                     data.Items.Add(basketItem);
+                    data.TotalPrice += basketItem.Price*basketItem.Quantity;
                     isNotFound = false;
                     await addDataToRedis(data);
                     break;

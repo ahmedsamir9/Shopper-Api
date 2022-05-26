@@ -29,6 +29,8 @@ namespace ShopperAPi.Controllers
 
       
         [HttpGet]
+        [ProducesResponseType(typeof(Order),200)]
+        [Authorize(Roles = RolesConstantHelper.AdminRole)]
         public IActionResult Get()
         {
             var data = _orderService.getAllOrders();
@@ -39,6 +41,7 @@ namespace ShopperAPi.Controllers
 
         // GET api/<OrderController>/5
         [HttpGet("{userEmail}")]
+        [Authorize(Roles = $"{RolesConstantHelper.AdminRole},{RolesConstantHelper.ClientRole}")]
         public IActionResult Get(string userEmail)
         {
            var order = _orderService.getOrdersForUser(userEmail);
@@ -48,6 +51,7 @@ namespace ShopperAPi.Controllers
 
         // POST api/<OrderController>
         [HttpPost]
+        [Authorize(Roles = RolesConstantHelper.AdminRole)]
         public async Task<IActionResult> Post(UserOrderDto userOrder)
         {
             var _currentUserData = User.Claims.getCurrentUserIdAndEmail();
@@ -70,6 +74,7 @@ namespace ShopperAPi.Controllers
 
         // DELETE api/<OrderController>/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = RolesConstantHelper.AdminRole)]
         public IActionResult Delete(int id)
         {
             var isDeleted = _orderService.removeOrder(id);
