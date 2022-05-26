@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using Core.Entities;
+using Core.Helpers;
 using Core.Interfaces;
 using Core.Specifications;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ShopperAPi.DTOS;
@@ -80,6 +82,7 @@ namespace ShopperAPi.Controllers
             return Ok(pagedList);
         }
         // POST api/<ProductsController>
+        [Authorize(Roles =RolesConstantHelper.AdminRole)]
         [HttpPost]
         public IActionResult PostProducts([FromForm] ProductMainpulationsDto product)
         {
@@ -109,6 +112,7 @@ namespace ShopperAPi.Controllers
             return Ok(count);
         }
         // PUT api/<ProductsController>/5
+        [Authorize(Roles =RolesConstantHelper.AdminRole)]
         [HttpPut("{id}")]
         public IActionResult EditProducts(int id, [FromForm] ProductMainpulationsDto product)
         {
@@ -141,6 +145,7 @@ namespace ShopperAPi.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        [Authorize(Roles = $"{RolesConstantHelper.AdminRole},{RolesConstantHelper.ClientRole}")]
         [HttpPut("{id}/Rate")]
         public IActionResult EditProducts(int id, int newRate)
         {
@@ -166,6 +171,7 @@ namespace ShopperAPi.Controllers
         }
 
         // DELETE api/<ProductsController>/5
+        [Authorize(Roles =RolesConstantHelper.AdminRole)]
         [HttpDelete("{id}")]
         public IActionResult DeleteProducts(int id)
         {

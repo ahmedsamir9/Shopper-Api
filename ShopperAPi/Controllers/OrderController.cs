@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using Core.Entities;
+using Core.Helpers;
 using Core.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ShopperAPi.DTOS.OrderDto;
 using ShopperAPi.Errors;
@@ -9,6 +11,7 @@ using ShopperAPi.Errors;
 
 namespace ShopperAPi.Controllers
 {
+    [Authorize(Roles =$"{RolesConstantHelper.AdminRole},{RolesConstantHelper.ClientRole}")]
     [Route("api/[controller]")]
     [ApiController]
     public class OrderController : ControllerBase
