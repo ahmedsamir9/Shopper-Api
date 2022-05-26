@@ -92,7 +92,6 @@ namespace ShopperAPi.Controllers
         [Authorize(Roles =RolesConstantHelper.AdminRole)]
         [HttpPost]
         [ProducesResponseType(typeof(ProductDto), 200)]
-       
         [ProducesResponseType(typeof(ApiErrorResponse), 400)]
         public IActionResult PostProducts([FromForm] ProductMainpulationsDto product)
         {
@@ -116,7 +115,6 @@ namespace ShopperAPi.Controllers
         [HttpGet("/{categoryName}/ProductsCount")]
         [ProducesResponseType(typeof(ProductDto), 200)]
         [ProducesResponseType(typeof(ApiErrorResponse), 404)]
-     
         public IActionResult GetProductCountInCategory(string categoryName)
         {
             var catgeory = _categoryRepository.FindOne(c=> c.Name == categoryName);
