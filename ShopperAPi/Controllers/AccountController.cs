@@ -84,9 +84,11 @@ namespace ShopperAPi.Controllers
                 ModelState.AddModelError("Email-UserName", "Email or User Name are not exists!");
                 return BadRequest(ModelState);
             }
-
             if (!await _userManager.CheckPasswordAsync(user, loginUser.Password))
-                return BadRequest("Login Refused: Invalid User Name or Password");
+            {
+                ModelState.AddModelError("Login Refused", "Invalid User Name or Password");
+                return BadRequest(ModelState);
+            }
 
             TokenFormat token = await _tokenService.CreateToken(user);
 
