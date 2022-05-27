@@ -82,7 +82,7 @@ namespace ShopperAPi.Controllers
                 ,productParams.PageNumber.Value,productParams.maxPrice,productParams.miniPrice,productParams.rate);
             var productCountSpec = new CountPagedProduct(productParams.CategoryName
                 , productParams.maxPrice, productParams.miniPrice, productParams.rate);
-            var products = _mapper.Map<List<ProductDto>>(ProductRepsitory.getRelatedProduct(productSpec));
+            var products = _mapper.Map<List<ProductDto>>(ProductRepsitory.getPagedProduct(productSpec));
             var count = ProductRepsitory.getPagesCount(productCountSpec);
            
             var pagedList = new PagingList<ProductDto>(productParams.PageNumber.Value, productParams.PageSize, count, products);
