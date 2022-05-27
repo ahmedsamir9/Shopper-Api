@@ -2,7 +2,7 @@
 A WebAPI for  Shopping Ecommerce Systems.
 
 # Archecture:
-## WebAPI has 3 Layers 
-  . Core
-  . Infrastructure
-  . Business Logic
+WebAPI has 3 Layers 
+###### Core
+###### Infrastructure
+###### Business Logic
