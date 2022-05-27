@@ -13,9 +13,8 @@ namespace Core.Specifications
         {
             if (rate != null) addNewCratriaToWhere(p => p.Rate >= rate);
             if (categoryName != null) addNewCratriaToWhere(p => p.Category.Name == categoryName);
-            if (maxPrice != null && miniPrice != null) addNewCratriaToWhere(p => p.Rate >= miniPrice && p.Rate <= maxPrice);
-          
-
+            if (maxPrice != null && miniPrice != null) addNewCratriaToWhere(p => p.Price >= miniPrice && p.Price <= maxPrice);
+            AddInclude("Category");
         }
     }
 }

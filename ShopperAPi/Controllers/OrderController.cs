@@ -51,7 +51,7 @@ namespace ShopperAPi.Controllers
 
         // POST api/<OrderController>
         [HttpPost]
-        [Authorize(Roles = RolesConstantHelper.AdminRole)]
+        [Authorize(Roles = RolesConstantHelper.ClientRole)]
         public async Task<IActionResult> Post(UserOrderDto userOrder)
         {
             var _currentUserData = User.Claims.getCurrentUserIdAndEmail();
