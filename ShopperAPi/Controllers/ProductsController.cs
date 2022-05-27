@@ -73,7 +73,7 @@ namespace ShopperAPi.Controllers
 
             return Ok(products);
         }
-        [HttpGet("/PagedProducts")]
+        [HttpGet("PagedProducts")]
         [ProducesResponseType(typeof(ProductDto), 200)]
         [ProducesResponseType(typeof(ApiErrorResponse), 404)]
         public IActionResult GetProducts([FromQuery]ProductParams productParams)
@@ -112,7 +112,7 @@ namespace ShopperAPi.Controllers
                 return BadRequest(new ApiErrorResponse(400,ex.Message));
             }
         }
-        [HttpGet("/{categoryName}/ProductsCount")]
+        [HttpGet("{categoryName}/ProductsCount")]
         [ProducesResponseType(typeof(ProductDto), 200)]
         [ProducesResponseType(typeof(ApiErrorResponse), 404)]
         public IActionResult GetProductCountInCategory(string categoryName)
